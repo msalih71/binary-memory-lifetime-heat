@@ -1,2 +1,47 @@
-# binary-memory-lifetime-heat
-Reproducibility software for exact binary-memory retention and minimum maintenance heat under uniform logical marginals.
+# Binary-memory retention and maintenance heat
+
+Reproducibility software for **Exact Retention and Minimum Maintenance Heat for Binary Memories with Uniform Logical Marginals**, by Mahgoub A. Salih, Department of Physics, College of Science, Qassim University, Saudi Arabia.
+
+Published software snapshot: 3 October 2026. Repository: https://github.com/msalih71/binary-memory-lifetime-heat. This software deposit does not claim journal publication or a DOI for the manuscript.
+
+## Scientific scope
+
+The exact target-lifetime optimum concerns two fixed classical codewords, independent binary-symmetric noise in each cycle, uniform logical marginals, no retained source-correlated auxiliary memory, degenerate endpoint states, and ideal distribution-matched quasistatic control. The heat includes cyclic controller reset. It excludes initial writing, readout and the physical noise operation.
+
+The fixed-distance average-heat lower bound extends to non-uniform logical marginals with an endpoint-entropy correction. The same optimal target-lifetime distance for arbitrary biased protocols is not established. Proposition 14 retains its analytical restriction epsilon <= 1/5; numerical checks outside that range are evidence at the tested points.
+
+All figures and CSVs are calculations of the stated model. No experimental data, fitted coefficients or external data downloads are used.
+
+## Run locally
+
+Use Python 3.12 and the versions recorded in `supplementary/environment.json` to reproduce the tested environment. From this directory:
+
+```bash
+python -m pip install -r requirements.txt
+python supplementary/verify_memory.py
+python supplementary/make_figures.py
+python supplementary/review_checks.py
+```
+
+A failed assertion exits the script unsuccessfully. Actual recorded outputs are supplied in `supplementary/*output.txt`.
+
+## Run in Google Colab
+
+Open `memory_lifetime_colab.ipynb` in Colab. Run its code cell and download `reproducibility.zip` from this repository and manually upload it, or upload the full manuscript package. The notebook extracts only the three named scripts, runs them, displays the two figures and downloads a result ZIP. It does not compile LaTeX.
+
+The notebook was additionally executed in an isolated local directory with upload, image display and download mocked; its computational scripts ran without replacement. The package-install call was skipped in favor of the already tested installed dependencies. This is a local workflow validation, not a live Google Colab session. The validation record reports whether all five generated CSVs match the supplied files byte for byte.
+
+## Files
+
+- `supplementary/verify_memory.py`: entropy, contraction, majority-vertex and exact-retention checks; lifetime–heat table.
+- `supplementary/make_figures.py`: model figures, retention and heat CSVs, binomial-tail prefactor checks.
+- `supplementary/review_checks.py`: posterior-entropy concavity and symmetry, biased-cycle heat accounting and finite-lifetime asymptotic diagnostics.
+- `supplementary/data/`: generated CSV files.
+- `figures/`: generated PDF and PNG figures.
+- `supplementary/environment.json`: versions used for the recorded calculations.
+- `supplementary/notebook_validation.json`: isolated notebook-execution report.
+- `CITATION.cff`: software citation metadata for this deposit.
+
+## Citation
+
+The software metadata are provided in `CITATION.cff`. Cite the actual repository commit used for reproduction. A journal citation or DOI for the manuscript can be added when available.

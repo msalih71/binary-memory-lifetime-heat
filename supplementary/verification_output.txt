@@ -1,0 +1,26 @@
+(i) entropy-pumping bound
+  repetition L=3: min ratio 1.0000, max 1.6551
+  repetition L=5: min ratio 1.0000, max 1.1508
+  repetition L=7: min ratio 1.0000, max 1.0302
+  soft re-encodings: violations 0, tightest ratio 1.0000
+(ii) binary KL coefficient
+  60 random channels: max (searched candidate - formula)/formula = -7.37e-11 (should be <= 0)
+(iii) majority vertex
+  10500 log-domain grid entries (10395 distinct): violations 0; 40 full-vertex 80-digit checks passed
+(iv) KL lifetime bound
+  rep3: max M_N/(1-w)^(2N) = 1.000, at completed N=299: 0.721
+  rep5: max M_N/(1-w)^(2N) = 1.000, at completed N=299: 0.755
+  rep5, biased threshold: max M_N/(1-w)^(2N) = 1.000, at completed N=299: 0.000
+  L=5, d=3: max M_N/(1-w)^(2N) = 1.000, at completed N=299: 0.721
+(v) exact uniform lifetime
+  1818 exact trajectory values; even distances, eps>1/5, suboptimal symmetric maps and prefactor checks passed
+(vi) lifetime-heat table (eps=0.05, M*=0.5)
+  N | KL necessary d | exact d | Fano bound | exact ideal minimum
+             10 |   3 |   3 | 0.797237766 | 0.816605982
+            100 |   5 |   5 | 1.419018589 | 1.425094702
+           1000 |   9 |   9 | 2.577030422 | 2.577372362
+          10000 |  11 |  11 | 3.150257243 | 3.150331426
+        1000000 |  17 |  17 | 4.868747406 | 4.868748071
+     1000000000 |  25 |  25 | 7.159923927 | 7.159923928
+  1000000000000 |  33 |  33 | 9.451099585 | 9.451099585
+PASS: all checks completed; Python 3.12.14 numpy 2.3.5 scipy 1.17.0

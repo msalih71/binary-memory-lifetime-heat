@@ -1,0 +1,36 @@
+{
+  "prior_grid_entries": 18018,
+  "direct_register_cases": 27,
+  "biased_trajectory_cycles": 810,
+  "epsilon_for_asymptotics": 0.05,
+  "odd_distance_step_heat_units": 0.5727939142319125,
+  "finite_asymptotic_residuals": [
+    {
+      "threshold": 0.1,
+      "targets": 220,
+      "leading_residual_range": 0.9278701014502905,
+      "loglog_residual_range": 0.5883306035129695
+    },
+    {
+      "threshold": 0.5,
+      "targets": 220,
+      "leading_residual_range": 0.8549492710079847,
+      "loglog_residual_range": 0.6530019822768819
+    },
+    {
+      "threshold": 0.9,
+      "targets": 220,
+      "leading_residual_range": 0.7990237870587154,
+      "loglog_residual_range": 0.6966948667256401
+    }
+  ],
+  "distance_counterexample": {
+    "epsilon": 0.05,
+    "threshold": 0.5,
+    "N": 3,
+    "d_KL": 1,
+    "d_exact": 3
+  },
+  "status": "PASS"
+}
+PASS: conditional-entropy symmetry, concavity and maximality; direct entropy identities; telescoping biased-cycle bound; finite-N diagnostics.

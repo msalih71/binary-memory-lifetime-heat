@@ -1,0 +1,50 @@
+{
+  "status": "PASS",
+  "mode": "isolated local execution of exact notebook code",
+  "colab_ui": "mocked upload, display and download",
+  "package_install": "skipped using already installed tested dependencies",
+  "computational_scripts": "all three executed without replacement",
+  "live_google_colab_session": false,
+  "csv_comparisons": [
+    {
+      "file": "supplementary/data/retention.csv",
+      "sha256": "9a215cb8ec99b434349349d43bbde7d8249a5ab7dba119c1dd7d5b5f8908aafc",
+      "byte_identical": true
+    },
+    {
+      "file": "supplementary/data/optimal_heat.csv",
+      "sha256": "0a2a05b6ed15a6bcd30d22b3fca8f5ef867a35c02a2ddbed131309ded465dc74",
+      "byte_identical": true
+    },
+    {
+      "file": "supplementary/data/tail_prefactor_check.csv",
+      "sha256": "905eff8bf1e14c46adf34d571fe816c93aef078f514990e8756be772db67a26a",
+      "byte_identical": true
+    },
+    {
+      "file": "supplementary/data/prior_maximality.csv",
+      "sha256": "6b80aad6369146d1081372a7d32da8a2fdcb700c51e29e9b4741118ecdaa260c",
+      "byte_identical": true
+    },
+    {
+      "file": "supplementary/data/finite_asymptotic_residuals.csv",
+      "sha256": "9d0af34dd96442f86d7307cb81b7eb46b623b9fd82a20b6a21a7723833a08b50",
+      "byte_identical": true
+    }
+  ],
+  "events": [
+    {
+      "installer": "skipped; validated installed runtime dependencies"
+    },
+    {
+      "displayed_image_bytes": 94208
+    },
+    {
+      "displayed_image_bytes": 68637
+    },
+    {
+      "download": "memory_lifetime_reproduction_results.zip",
+      "bytes": 280120
+    }
+  ]
+}

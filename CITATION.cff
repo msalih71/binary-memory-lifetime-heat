@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+message: "Please cite the software version or commit used for reproduction."
+type: software
+title: "Binary-memory retention and maintenance heat: reproducibility software"
+authors:
+  - family-names: "Salih"
+    given-names: "Mahgoub A."
+    affiliation: "Department of Physics, College of Science, Qassim University, Saudi Arabia"
+abstract: >-
+  Numerical verification of two-codeword binary-memory retention and ideal
+  correction heat, including contraction bounds, posterior conditional entropy,
+  biased logical marginals and binomial-tail asymptotics. The exact lifetime
+  optimum is restricted to uniform logical marginals and ideal control.
+keywords:
+  - "information thermodynamics"
+  - "memory retention"
+  - "binary symmetric channel"
+  - "Landauer principle"
+
+version: "2026.10.03"
+date-released: 2026-10-03
+repository-code: "https://github.com/msalih71/binary-memory-lifetime-heat"
+url: "https://github.com/msalih71/binary-memory-lifetime-heat"
