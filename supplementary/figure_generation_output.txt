@@ -1,2 +1,3 @@
 PASS: figures and CSVs generated; 1001 independent retention checks; posterior entropy cross-checks passed
 Tail-prefactor log-ratios at odd d=10001: [(0.05, -9.843353291216772e-05), (0.25, -0.0003746431111721904), (0.4, -0.0024598101658739324)]
+PASS: all integer heat transitions computed at 70 digits; 663 intervals

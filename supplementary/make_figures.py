@@ -2,8 +2,12 @@
 Run from the project root: python supplementary/make_figures.py
 Requires numpy, scipy, matplotlib. No observational data or fitted parameters.
 """
+if not __debug__:
+    raise RuntimeError("Verification requires normal Python execution; do not use -O or -OO.")
+
 from pathlib import Path
 import csv, math, importlib.util
+from decimal import Decimal, localcontext, ROUND_FLOOR
 import numpy as np
 from scipy.special import gammaln, expit, xlogy
 import matplotlib
@@ -38,6 +42,41 @@ def verify_tail_prefactor():
         errors.append((e,delta))
     return errors
 
+def heat_intervals(e, threshold=.5, nmin=10, nmax=10**12):
+    """Every integer transition, with 70-digit tail and threshold arithmetic."""
+    intervals=[]
+    with localcontext() as ctx:
+        ctx.prec=70
+        E=Decimal(str(e)); one=Decimal(1); logtwo=Decimal(2).ln()
+        target=Decimal(str(threshold))
+        def h_decimal(p):
+            if p == 0 or p == 1:return Decimal(0)
+            return -(p*p.ln()+(one-p)*(one-p).ln())/logtwo
+        lo=Decimal(0);hi=Decimal('.5')
+        for _ in range(240):
+            mid=(lo+hi)/2
+            if h_decimal(mid)<one-target:lo=mid
+            else:hi=mid
+        budget=-(one-lo-hi).ln()
+        previous=0;d=1
+        while previous<nmax:
+            k=(d+1)//2
+            mass=Decimal(math.comb(d,k))*E**k*(one-E)**(d-k)
+            tail=mass
+            for j in range(k,d):
+                mass*=Decimal(d-j)/Decimal(j+1)*E/(one-E)
+                tail+=mass
+            rate=-(one-2*tail).ln()
+            cap=int((budget/rate).to_integral_value(rounding=ROUND_FLOOR))
+            assert Decimal(cap)*rate<=budget<Decimal(cap+1)*rate
+            left=max(nmin,previous+1);right=min(nmax,cap)
+            if left<=right:
+                intervals.append((left,right,d,d*v.h(e)-posterior_entropy(d,e),cap))
+            previous=cap;d+=2
+        assert intervals[0][0]==nmin and intervals[-1][1]==nmax
+        assert all(b[0]==a[1]+1 for a,b in zip(intervals,intervals[1:]))
+    return intervals
+
 plt.rcParams.update({'font.size':10,'axes.spines.top':False,'axes.spines.right':False,
                      'savefig.bbox':'tight','pdf.fonttype':42})
 e=.05;d=5;w=v.omega(d,e);n=np.arange(0,1001)
@@ -61,7 +100,7 @@ fig.savefig(OUT/'retention_bounds.pdf');fig.savefig(OUT/'retention_bounds.png',d
 with (DATA/'retention.csv').open('w',newline='') as f:
     wr=csv.writer(f);wr.writerow(['N','independent_MI_bits','exact_MI_bits','KL_bound_bits','Dobrushin_bound_bits']);wr.writerows(rows)
 
-fig,ax=plt.subplots(figsize=(6.6,3.8));rows=[]
+fig,ax=plt.subplots(figsize=(6.6,3.8));rows=[];transition_rows=[]
 ns=np.unique(np.round(np.geomspace(10,1e12,220)).astype(np.int64))
 for e,color in [(.05,'#176b87'),(.2,'#b85c38'),(.4,'#6b5b95')]:
     C=-math.log(2*math.sqrt(e*(1-e)));heat=[];leading=[]
@@ -73,13 +112,22 @@ for e,color in [(.05,'#176b87'),(.2,'#b85c38'),(.4,'#6b5b95')]:
         assert Q>=fano-1e-8 and math.isfinite(Q)
         heat.append(Q);leading.append(v.h(e)/C*math.log(int(N)))
         rows.append((e,int(N),distance,Hpost,Q,fano,leading[-1]))
-    ax.plot(ns,heat,color=color,label=rf'Exact optimum, $\epsilon={e:g}$',lw=1.8)
+    intervals=heat_intervals(e)
+    edges=[intervals[0][0]]+[part[1]+1 for part in intervals]
+    values=[part[3] for part in intervals]
+    ax.stairs(values,edges,baseline=None,color=color,label=rf'Exact optimum, $\epsilon={e:g}$',lw=1.8)
+    transition_rows.extend((e,.5,left,right,d,Q,cap) for left,right,d,Q,cap in intervals)
+    for N,Q in zip(ns,heat):
+        interval=next(part for part in intervals if part[0]<=int(N)<=part[1])
+        assert abs(Q-interval[3])<1e-11, 'sample and integer interval disagree'
     ax.plot(ns,leading,'--',color=color,alpha=.65,lw=1)
 ax.set_xscale('log');ax.set_yscale('log');ax.set(xlabel='Target completed cycles N',ylabel=r'Mean correction heat $\bar Q/(k_B T\ln 2)$')
 ax.legend(frameon=False,fontsize=8);ax.grid(alpha=.18);fig.tight_layout()
 fig.savefig(OUT/'optimal_heat.pdf');fig.savefig(OUT/'optimal_heat.png',dpi=180);plt.close(fig)
 with (DATA/'optimal_heat.csv').open('w',newline='') as f:
     wr=csv.writer(f);wr.writerow(['epsilon','N','minimal_distance','posterior_entropy_bits','exact_heat_units','Fano_lower_bound_units','leading_asymptotic_units']);wr.writerows(rows)
+with (DATA/'heat_transitions.csv').open('w',newline='') as f:
+    wr=csv.writer(f);wr.writerow(['epsilon','threshold','first_integer_N','last_integer_N','minimal_distance','exact_heat_units','max_supported_N_for_distance']);wr.writerows(transition_rows)
 for d in range(1,34):
     assert abs(posterior_entropy(d,.05)-v.HY_given_R(d,.05))<1e-11
 errors=verify_tail_prefactor()
@@ -87,3 +135,4 @@ with (DATA/'tail_prefactor_check.csv').open('w',newline='') as f:
     wr=csv.writer(f);wr.writerow(['epsilon','distance','log_ratio_to_asymptotic']);wr.writerows((e,10001,error) for e,error in errors)
 print('PASS: figures and CSVs generated; 1001 independent retention checks; posterior entropy cross-checks passed')
 print('Tail-prefactor log-ratios at odd d=10001:',errors)
+print('PASS: all integer heat transitions computed at 70 digits;',len(transition_rows),'intervals')

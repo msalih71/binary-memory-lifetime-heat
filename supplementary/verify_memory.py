@@ -3,6 +3,11 @@
 Requires numpy and scipy; decimal is from the Python standard library.
 All violations raise AssertionError.
 """
+if not __debug__:
+    raise RuntimeError("Verification requires normal Python execution; do not use -O or -OO.")
+
+from pathlib import Path
+import csv
 import itertools
 from decimal import Decimal, getcontext
 from math import comb, log, log2, log1p, exp, floor
@@ -311,6 +316,7 @@ def check_exact_uniform():
 
 def table(e=0.05, Ms=0.5):
     lines = ["  N | KL necessary d | exact d | Fano bound | exact ideal minimum"]
+    records = []
     expected = [3,5,9,11,17,25,33]
     for i, N in enumerate((10, 10**2, 10**3, 10**4, 10**6, 10**9, 10**12)):
         dkl = 1
@@ -324,7 +330,14 @@ def table(e=0.05, Ms=0.5):
         fano = d*h(e)-h(omega(d,e)/2)
         qmin = d*h(e)-posterior
         require(qmin >= fano-1e-10, "Fano bound violation")
+        records.append((N, dkl, d, fano, qmin))
         lines.append(f"  {N:>13} | {dkl:>3} | {d:>3} | {fano:.9f} | {qmin:.9f}")
+    data = Path(__file__).resolve().parents[1] / "supplementary" / "data"
+    data.mkdir(parents=True, exist_ok=True)
+    with (data / "table1.csv").open("w", newline="") as stream:
+        writer = csv.writer(stream)
+        writer.writerow(["N", "KL_necessary_distance", "exact_minimal_distance", "Fano_bound_heat_units", "exact_heat_infimum_units"])
+        writer.writerows(records)
     return lines
 
 

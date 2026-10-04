@@ -3,6 +3,9 @@
 Run from the project root. Numerical checks supplement the analytical proof.
 No experimental data or fitted parameters are used.
 """
+if not __debug__:
+    raise RuntimeError("Verification requires normal Python execution; do not use -O or -OO.")
+
 from pathlib import Path
 import csv
 import itertools

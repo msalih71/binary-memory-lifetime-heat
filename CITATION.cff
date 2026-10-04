@@ -17,7 +17,7 @@ keywords:
   - "binary symmetric channel"
   - "Landauer principle"
 
-version: "2026.10.03"
-date-released: 2026-10-03
+version: "2026.10.04"
+date-released: 2026-10-04
 repository-code: "https://github.com/msalih71/binary-memory-lifetime-heat"
 url: "https://github.com/msalih71/binary-memory-lifetime-heat"
